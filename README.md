@@ -23,3 +23,14 @@ brew install --no-sandbox msodbcsql17 mssql-tools
 ```
 sqlcmd -S 127.0.0.1 -U sa -P your_password -Q "CREATE DATABASE SampleDB;"
 ```
+
+### Start up this project
+- Node server running
+
+`sails lift` or `node app.js`
+
+default server port: http://localhost:1337
+
+- Connection checking
+
+`GET /api-v1/api-v1/checkingConnection`

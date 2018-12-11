@@ -1,2 +1,6 @@
-# tedious
-This is a prototype project to build user interface with MS-SQL-Server.
+# Tedious App
+
+Vue.js/Vuetify + Node.js/Sails.js + Tedious + MSSQL
+
+
+### 

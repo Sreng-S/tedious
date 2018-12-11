@@ -1,7 +1,189 @@
 <div id="app">
-<v-app>
-  <v-content>
-    <v-container>Hello world</v-container>
-  </v-content>
-</v-app>
+  <v-app>
+    <v-content>
+      <v-toolbar
+        color="primary"
+        dark
+      >
+        <v-spacer></v-spacer>
+        <v-toolbar-title>User Input Interface</v-toolbar-title>
+        <v-spacer></v-spacer>
+      </v-toolbar>
+      <v-container fluid>
+        <v-card>
+          <v-layout
+            row
+            wrap
+            justify-space-around
+          >
+            <v-flex xs12 sm6>
+              <v-subheader>Databases:</v-subheader>
+              <v-divider class="mx-3"></v-divider>
+              <v-layout
+                justify-space-around
+                row
+              >
+                <v-flex xs12 md4>
+                  <v-text-field
+                    v-model="serverName"
+                    label="Server Name"
+                  ></v-text-field>
+                </v-flex>
+                <v-flex xs12 md4>
+                  <v-text-field
+                    v-model="authType"
+                    label="Authentication Type"
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
+              <v-layout
+                justify-space-around
+                row
+              >
+                <v-flex xs12 md4>
+                  <v-text-field
+                    v-model="userName"
+                    label="User Name"
+                  ></v-text-field>
+                </v-flex>
+                <v-flex xs12 md4>
+                  <v-text-field
+                    v-model="pass"
+                    label="Password"
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
+              <v-layout
+                justify-space-around
+                row
+              >
+                <v-flex xs12 md4>
+                  <v-text-field
+                    v-model="procedureName"
+                    label="Procedure Name"
+                  ></v-text-field>
+                </v-flex>
+                <v-flex xs12 md4></v-flex>
+              </v-layout>
+
+              <v-subheader>Industry:</v-subheader>
+              <v-divider class="mx-3"></v-divider>
+              <v-layout
+                justify-space-around
+                row
+              >
+                <v-flex xs6>
+                  <v-radio-group v-model="naics4" label="NAICS 4?" row>
+                    <v-radio label="Yes" value="naics4-1"></v-radio>
+                    <v-radio label="No" value="naics4-2"></v-radio>
+                  </v-radio-group>
+                </v-flex>
+              </v-layout>
+              <v-layout
+                justify-space-around
+                row
+              >
+                <v-flex xs6>
+                  <v-radio-group v-model="naics6" label="NAICS 6?" row>
+                    <v-radio label="Yes" value="naics6-1"></v-radio>
+                    <v-radio label="No" value="naics6-2"></v-radio>
+                  </v-radio-group>
+                </v-flex>
+              </v-layout>
+              <v-layout
+                justify-space-around
+                row
+              >
+                <v-flex xs6>
+                  <v-radio-group v-model="naics8" label="NAICS 8?" row>
+                    <v-radio label="Yes" value="naics8-1"></v-radio>
+                    <v-radio label="No" value="naics8-2"></v-radio>
+                  </v-radio-group>
+                </v-flex>
+              </v-layout>
+              <v-layout
+                justify-space-around
+                row
+              >
+                <v-flex xs6>
+                  <v-text-field
+                    v-model="naicsCode"
+                    label="NAICS Code"
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
+            </v-flex>
+            <v-flex xs12 sm6>
+              <v-subheader>Geography:</v-subheader>
+              <v-divider class="mx-3"></v-divider>
+              <v-layout row wrap align-center>
+                <v-flex xs12 sm4>
+                  <v-subheader v-text="'State'"></v-subheader>
+                </v-flex>
+                <v-flex xs12 sm8>
+                  <v-select
+                    :items="states"
+                    v-model="selectedState"
+                    :menu-props="{ maxHeight: '400' }"
+                    label="Select"
+                    hint=""
+                    persistent-hint
+                  ></v-select>
+                </v-flex>
+                <v-flex xs12 sm4>
+                  <v-subheader v-text="'Country'"></v-subheader>
+                </v-flex>
+                <v-flex xs12 sm8>
+                  <v-select
+                    :items="countries"
+                    v-model="selectedCountry"
+                    :menu-props="{ maxHeight: '400' }"
+                    label="Select"
+                    hint=""
+                    persistent-hint
+                  ></v-select>
+                </v-flex>
+              </v-layout>
+
+              <v-subheader>Options:</v-subheader>
+              <v-divider class="mx-3"></v-divider>
+              <v-layout
+                justify-space-around
+                row
+              >
+                <v-flex xs6>
+                  <v-radio-group v-model="businessCount" label="Business Count" row>
+                    <v-radio label="Yes" value="businessCount-1"></v-radio>
+                    <v-radio label="No" value="businessCount-2"></v-radio>
+                  </v-radio-group>
+                </v-flex>
+              </v-layout>
+              <v-layout
+                justify-space-around
+                row
+              >
+                <v-flex xs6>
+                  <v-radio-group v-model="jobCount" label="Jobs Count" row>
+                    <v-radio label="Yes" value="jobCount-1"></v-radio>
+                    <v-radio label="No" value="jobCount-2"></v-radio>
+                  </v-radio-group>
+                </v-flex>
+              </v-layout>
+              <v-layout
+                justify-space-around
+                row
+              >
+                <v-flex xs6>
+                  <v-radio-group v-model="individualRecord" label="Individual Records" row>
+                    <v-radio label="Yes" value="individualRecord-1"></v-radio>
+                    <v-radio label="No" value="individualRecord-2"></v-radio>
+                  </v-radio-group>
+                </v-flex>
+              </v-layout>
+            </v-flex>
+          </v-layout>
+        </v-card>
+      </v-container>
+    </v-content>
+  </v-app>
 </div>

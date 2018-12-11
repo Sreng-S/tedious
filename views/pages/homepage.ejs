@@ -11,101 +11,73 @@
       </v-toolbar>
       <v-container fluid>
         <v-card>
-          <v-layout
-            row
-            wrap
-            justify-space-around
-          >
-            <v-flex xs12 sm6>
+          <v-layout>
+            <v-flex xs12 md6>
               <v-subheader>Databases:</v-subheader>
               <v-divider class="mx-3"></v-divider>
-              <v-layout
-                justify-space-around
-                row
-              >
-                <v-flex xs12 md4>
+              <v-layout row>
+                <v-flex xs12 sm6 class="px-3">
                   <v-text-field
                     v-model="serverName"
                     label="Server Name"
                   ></v-text-field>
                 </v-flex>
-                <v-flex xs12 md4>
+                <v-flex xs12 sm6 class="px-3">
                   <v-text-field
                     v-model="authType"
                     label="Authentication Type"
                   ></v-text-field>
                 </v-flex>
               </v-layout>
-              <v-layout
-                justify-space-around
-                row
-              >
-                <v-flex xs12 md4>
+              <v-layout row>
+                <v-flex xs12 sm6 class="px-3">
                   <v-text-field
                     v-model="userName"
                     label="User Name"
                   ></v-text-field>
                 </v-flex>
-                <v-flex xs12 md4>
+                <v-flex xs12 sm6 class="px-3">
                   <v-text-field
                     v-model="pass"
                     label="Password"
                   ></v-text-field>
                 </v-flex>
               </v-layout>
-              <v-layout
-                justify-space-around
-                row
-              >
-                <v-flex xs12 md4>
+              <v-layout row>
+                <v-flex xs12 sm6 class="px-3">
                   <v-text-field
                     v-model="procedureName"
                     label="Procedure Name"
                   ></v-text-field>
                 </v-flex>
-                <v-flex xs12 md4></v-flex>
+                <v-flex xs12 sm6 class="px-3"></v-flex>
               </v-layout>
 
               <v-subheader>Industry:</v-subheader>
               <v-divider class="mx-3"></v-divider>
-              <v-layout
-                justify-space-around
-                row
-              >
-                <v-flex xs6>
+              <v-layout row wrap>
+                <v-flex xs12 class="px-3">
                   <v-radio-group v-model="naics4" label="NAICS 4?" row>
                     <v-radio label="Yes" value="naics4-1"></v-radio>
                     <v-radio label="No" value="naics4-2"></v-radio>
                   </v-radio-group>
                 </v-flex>
-              </v-layout>
-              <v-layout
-                justify-space-around
-                row
-              >
-                <v-flex xs6>
+                <v-flex xs12 class="px-3">
                   <v-radio-group v-model="naics6" label="NAICS 6?" row>
                     <v-radio label="Yes" value="naics6-1"></v-radio>
                     <v-radio label="No" value="naics6-2"></v-radio>
                   </v-radio-group>
                 </v-flex>
-              </v-layout>
-              <v-layout
-                justify-space-around
-                row
-              >
-                <v-flex xs6>
+                <v-flex xs12 class="px-3">
                   <v-radio-group v-model="naics8" label="NAICS 8?" row>
                     <v-radio label="Yes" value="naics8-1"></v-radio>
                     <v-radio label="No" value="naics8-2"></v-radio>
                   </v-radio-group>
                 </v-flex>
+
               </v-layout>
-              <v-layout
-                justify-space-around
-                row
-              >
-                <v-flex xs6>
+              <v-layout row>
+                <v-flex xs12 sm6 class="px-3">
                   <v-text-field
                     v-model="naicsCode"
                     label="NAICS Code"
@@ -113,7 +85,7 @@
                 </v-flex>
               </v-layout>
             </v-flex>
-            <v-flex xs12 sm6>
+            <v-flex xs12 md6>
               <v-subheader>Geography:</v-subheader>
               <v-divider class="mx-3"></v-divider>
               <v-layout row wrap align-center>
@@ -147,42 +119,50 @@
 
               <v-subheader>Options:</v-subheader>
               <v-divider class="mx-3"></v-divider>
-              <v-layout
-                justify-space-around
-                row
-              >
-                <v-flex xs6>
+              <v-layout row>
+                <v-flex xs12 class="px-3">
                   <v-radio-group v-model="businessCount" label="Business Count" row>
                     <v-radio label="Yes" value="businessCount-1"></v-radio>
                     <v-radio label="No" value="businessCount-2"></v-radio>
                   </v-radio-group>
                 </v-flex>
               </v-layout>
-              <v-layout
-                justify-space-around
-                row
-              >
-                <v-flex xs6>
+              <v-layout row>
+                <v-flex xs12 class="px-3">
                   <v-radio-group v-model="jobCount" label="Jobs Count" row>
                     <v-radio label="Yes" value="jobCount-1"></v-radio>
                     <v-radio label="No" value="jobCount-2"></v-radio>
                   </v-radio-group>
                 </v-flex>
               </v-layout>
-              <v-layout
-                justify-space-around
-                row
-              >
-                <v-flex xs6>
+              <v-layout row>
+                <v-flex xs12 class="px-3">
                   <v-radio-group v-model="individualRecord" label="Individual Records" row>
                     <v-radio label="Yes" value="individualRecord-1"></v-radio>
                     <v-radio label="No" value="individualRecord-2"></v-radio>
                   </v-radio-group>
                 </v-flex>
               </v-layout>
+              <v-layout row>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" @click="connectStatus">Run Query</v-btn>
+              </v-layout>
             </v-flex>
           </v-layout>
         </v-card>
+
+        <v-layout row wrap class="mt-2">
+          <v-flex xs12>
+            <v-textarea
+              outline
+              readonly
+              name="input-7-4"
+              label="Result:"
+              :value="result"
+            ></v-textarea>
+          </v-flex>
+        </v-layout>
+
       </v-container>
     </v-content>
   </v-app>

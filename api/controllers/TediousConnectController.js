@@ -18,9 +18,9 @@ module.exports = {
 
     // Create connection to database
     var config = {
-      userName: 'sa', // update me
-      password: 'Admin123', // update me
-      server: '127.0.0.1',
+      userName: req.param('userName'), // update me
+      password: req.param('password'), // update me
+      server: req.param('server'),
       options: {
         database: 'SampleDB'
       }
@@ -32,13 +32,13 @@ module.exports = {
       if (err) {
         console.log(err);
         return res.badRequest({
-          connected: false,
-          err: err
+          err: err,
+          message: 'Disconnected MS-SQL Server.'
         })
       } else {
         console.log('Connected');
         return res.ok({
-          connected: true,
+          message: 'Connected MS-SQL Server.'
         })
       }
     });

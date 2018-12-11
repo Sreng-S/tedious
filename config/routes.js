@@ -44,7 +44,7 @@ module.exports.routes = {
   //  ╠═╣╠═╝║  ║╣ ║║║ ║║╠═╝║ ║║║║║ ║ ╚═╗
   //  ╩ ╩╩  ╩  ╚═╝╝╚╝═╩╝╩  ╚═╝╩╝╚╝ ╩ ╚═╝
 
-  'GET /api-v1/connectStatus': 'TediousConnectController.checkingConnection',
+  'POST /api-v1/connectStatus': 'TediousConnectController.checkingConnection',
   'POST /api-v1/runQuery': 'TediousConnectController.runQuery',
 
 

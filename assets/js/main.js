@@ -47,6 +47,27 @@ new Vue({
       businessCount: '',
       jobCount: '',
       individualRecord: '',
+      result: '',
     }
+  },
+  methods: {
+    connectStatus() {
+      axios
+        .get('/api-v1/connectStatus')
+        .then(response => {
+          console.log(response.data)
+          this.result += JSON.stringify(response.data) + '\n'
+        })
+        .catch(err => {
+          console.log(err)
+          this.result += JSON.stringify(err) + '\n'
+        })
+    },
+    runQuery() {
+      
+    }
+  },
+  computed: {
+
   }
 })

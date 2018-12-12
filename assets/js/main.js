@@ -61,6 +61,7 @@ new Vue({
         .then(response => {
           console.log(response.data)
           this.result += `${response.data.message}\n`
+          this.runQuery()
         })
         .catch(err => {
           console.log(err)
@@ -68,7 +69,20 @@ new Vue({
         })
     },
     runQuery() {
-
+      axios
+        .post('/api-v1/runQuery', {
+          userName: this.userName,
+          password: this.pass,
+          server: this.serverName,
+        })
+        .then(response => {
+          console.log(response.data)
+          this.result += `${response.data.message}\n`
+        })
+        .catch(err => {
+          console.log(err)
+          this.result += JSON.stringify(err) + '\n'
+        })
     }
   },
   computed: {

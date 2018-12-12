@@ -14,14 +14,19 @@ brew tap microsoft/mssql-release https://github.com/Microsoft/homebrew-mssql-rel
 brew update
 brew install --no-sandbox msodbcsql17 mssql-tools
 ```
--  SQL Query testing:
+-  Testing SQL Query:
 
  ```sqlcmd -S 127.0.0.1 -U sa -P your_password -Q "SELECT @@VERSION;"```
 
-- Sample database creating:
+- Creating sample database:
 
 ```
 sqlcmd -S 127.0.0.1 -U sa -P your_password -Q "CREATE DATABASE SampleDB;"
+```
+
+- Creating DB schema
+```
+sqlcmd -S 127.0.0.1 -U sa -P your_password -d SampleDB -i ./schema.sql
 ```
 
 ### Start up this project

@@ -8,12 +8,18 @@ Vue.js/Vuetify + Node.js/Sails.js + Tedious + MSSQL
 
 ```docker run -e 'HOMEBREW_NO_ENV_FILTERING=1' -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=yourStrong(!)Password' -p 1433:1433 -d microsoft/mssql-server-linux```
 
-When try to connect via terminal CMD, 
+Install sqlcmd on macOS, 
 ```
 brew tap microsoft/mssql-release https://github.com/Microsoft/homebrew-mssql-release
 brew update
 brew install --no-sandbox msodbcsql17 mssql-tools
 ```
+
+Install sqlcmd on Windows
+
+[Install the ODBC Driver]https://www.microsoft.com/en-us/download/details.aspx?id=56567
+
+[Install the SQL Server Command Line Utilities]https://www.microsoft.com/en-us/download/details.aspx?id=53591
 -  Testing SQL Query:
 
  ```sqlcmd -S 127.0.0.1 -U sa -P your_password -Q "SELECT @@VERSION;"```

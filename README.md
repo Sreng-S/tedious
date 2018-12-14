@@ -27,12 +27,12 @@ Install sqlcmd on Windows
 - Creating sample database:
 
 ```
-sqlcmd -S 127.0.0.1 -U sa -P your_password -Q "CREATE DATABASE SampleDB;"
+sqlcmd -S 127.0.0.1 -U sa -P your_password -Q "CREATE DATABASE DBE;"
 ```
 
-- Creating DB schema
+- Importing sql dump
 ```
-sqlcmd -S 127.0.0.1 -U sa -P your_password -d SampleDB -i ./schema.sql
+sqlcmd -S 127.0.0.1 -U sa -P your_password -d DBE -i ./schema.sql
 ```
 
 ### Start up this project

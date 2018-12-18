@@ -2,30 +2,68 @@
   <v-app>
     <v-content>
       <v-toolbar
-        color="primary"
-        dark
+        fixed
+        extended
       >
         <v-spacer></v-spacer>
         <v-toolbar-title>User Input Interface</v-toolbar-title>
         <v-spacer></v-spacer>
+        <v-layout
+          row
+          wrap
+          align-right
+          slot="extension"
+        >
+          <v-spacer></v-spacer>
+          <v-flex xs4 sm3 class="mr-5">
+            <v-text-field
+              v-model="search"
+              append-icon="search"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-flex>
+        </v-layout>
+        <v-btn
+          small
+          right
+          absolute
+          bottom
+          fab
+          color="primary"
+          @click="fab = !fab"
+        >
+          <v-icon v-if="!fab">create</v-icon>
+          <v-icon v-else>close</v-icon>
+        </v-btn>
       </v-toolbar>
+      <v-container style="padding-top: 90px;"></v-container>
+
       <v-container fluid>
-        <v-card>
+        <!-- query panel -->
+        <v-card
+          v-if="fab"
+          dense
+          absolute
+          transition="scale-transition"
+        >
           <v-layout>
             <v-flex xs12 md6>
               <v-subheader>Databases:</v-subheader>
-              <v-divider class="mx-3"></v-divider>
               <v-layout row>
                 <v-flex xs12 sm6 class="px-3">
                   <v-text-field
                     v-model="serverName"
                     label="Server Name"
+                    hide-details
                   ></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 class="px-3">
                   <v-text-field
                     v-model="authType"
                     label="Authentication Type"
+                    hide-details
                   ></v-text-field>
                 </v-flex>
               </v-layout>
@@ -34,12 +72,14 @@
                   <v-text-field
                     v-model="userName"
                     label="User Name"
+                    hide-details
                   ></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 class="px-3">
                   <v-text-field
                     v-model="pass"
                     label="Password"
+                    hide-details
                   ></v-text-field>
                 </v-flex>
               </v-layout>
@@ -48,35 +88,43 @@
                   <v-text-field
                     v-model="procedureName"
                     label="Procedure Name"
+                    hide-details
                   ></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 class="px-3"></v-flex>
               </v-layout>
 
               <v-subheader>Industry:</v-subheader>
-              <v-divider class="mx-3"></v-divider>
               <v-layout row wrap>
-                <v-flex xs12 class="px-3">
-                  <v-radio-group v-model="naics4" label="NAICS 4?" row>
+                <v-flex xs12 sm6 class="px-3">
+                  <v-radio-group
+                    v-model="naics4"
+                    label="NAICS 4?"
+                    row
+                    hide-details
+                  >
                     <v-radio label="Yes" value="naics4-1"></v-radio>
                     <v-radio label="No" value="naics4-2"></v-radio>
                   </v-radio-group>
-                </v-flex>
-                <v-flex xs12 class="px-3">
-                  <v-radio-group v-model="naics6" label="NAICS 6?" row>
+                  <v-radio-group
+                    v-model="naics6"
+                    label="NAICS 6?"
+                    row
+                    hide-details
+                  >
                     <v-radio label="Yes" value="naics6-1"></v-radio>
                     <v-radio label="No" value="naics6-2"></v-radio>
                   </v-radio-group>
-                </v-flex>
-                <v-flex xs12 class="px-3">
-                  <v-radio-group v-model="naics8" label="NAICS 8?" row>
+                  <v-radio-group
+                    v-model="naics8"
+                    label="NAICS 8?"
+                    row
+                    hide-details
+                  >
                     <v-radio label="Yes" value="naics8-1"></v-radio>
                     <v-radio label="No" value="naics8-2"></v-radio>
                   </v-radio-group>
                 </v-flex>
-
-              </v-layout>
-              <v-layout row>
                 <v-flex xs12 sm6 class="px-3">
                   <v-text-field
                     v-model="naicsCode"
@@ -87,12 +135,11 @@
             </v-flex>
             <v-flex xs12 md6>
               <v-subheader>Geography:</v-subheader>
-              <v-divider class="mx-3"></v-divider>
               <v-layout row wrap align-center>
                 <v-flex xs12 sm4>
                   <v-subheader v-text="'State'"></v-subheader>
                 </v-flex>
-                <v-flex xs12 sm8>
+                <v-flex xs12 sm8 class="pr-3">
                   <v-select
                     :items="states"
                     v-model="selectedState"
@@ -105,7 +152,7 @@
                 <v-flex xs12 sm4>
                   <v-subheader v-text="'Country'"></v-subheader>
                 </v-flex>
-                <v-flex xs12 sm8>
+                <v-flex xs12 sm8 class="pr-3">
                   <v-select
                     :items="countries"
                     v-model="selectedCountry"
@@ -118,26 +165,49 @@
               </v-layout>
 
               <v-subheader>Options:</v-subheader>
-              <v-divider class="mx-3"></v-divider>
               <v-layout row>
-                <v-flex xs12 class="px-3">
-                  <v-radio-group v-model="businessCount" label="Business Count" row>
+                <v-flex xs12 sm4>
+                  <v-subheader v-text="'Business Count'"></v-subheader>
+                </v-flex>
+                <v-flex xs12 sm8>
+                  <v-radio-group
+                    v-model="businessCount"
+                    label=""
+                    row
+                    hide-details
+                  >
                     <v-radio label="Yes" value="businessCount-1"></v-radio>
                     <v-radio label="No" value="businessCount-2"></v-radio>
                   </v-radio-group>
                 </v-flex>
               </v-layout>
               <v-layout row>
-                <v-flex xs12 class="px-3">
-                  <v-radio-group v-model="jobCount" label="Jobs Count" row>
+                <v-flex xs12 sm4>
+                  <v-subheader v-text="'Jobs Count'"></v-subheader>
+                </v-flex>
+                <v-flex xs12 sm8>
+                  <v-radio-group
+                    v-model="jobCount"
+                    label=""
+                    row
+                    hide-details
+                  >
                     <v-radio label="Yes" value="jobCount-1"></v-radio>
                     <v-radio label="No" value="jobCount-2"></v-radio>
                   </v-radio-group>
                 </v-flex>
               </v-layout>
               <v-layout row>
-                <v-flex xs12 class="px-3">
-                  <v-radio-group v-model="individualRecord" label="Individual Records" row>
+                <v-flex xs12 sm4>
+                  <v-subheader v-text="'Individual Records'"></v-subheader>
+                </v-flex>
+                <v-flex xs12 sm8>
+                  <v-radio-group
+                    v-model="individualRecord"
+                    label=""
+                    row
+                    hide-details
+                  >
                     <v-radio label="Yes" value="individualRecord-1"></v-radio>
                     <v-radio label="No" value="individualRecord-2"></v-radio>
                   </v-radio-group>
@@ -151,31 +221,9 @@
           </v-layout>
         </v-card>
 
-        <!--<v-layout row wrap class="mt-2">-->
-          <!--<v-flex xs12>-->
-            <!--<v-textarea-->
-              <!--outline-->
-              <!--readonly-->
-              <!--name="input-7-4"-->
-              <!--label="Result:"-->
-              <!--:value="result"-->
-            <!--&gt;</v-textarea>-->
-          <!--</v-flex>-->
-        <!--</v-layout>-->
-
-      </v-container>
-      <v-container fluid>
+        <!-- data table -->
         <v-card>
-          <v-card-title>
-            <v-spacer></v-spacer>
-            <v-text-field
-              v-model="search"
-              append-icon="search"
-              label="Search"
-              single-line
-              hide-details
-            ></v-text-field>
-          </v-card-title>
+          <v-card-title></v-card-title>
           <v-data-table
             :headers="headers"
             :items="queryResult"
@@ -224,7 +272,24 @@
     data() {
       return {
         authType: '',
-        businessCount: '',
+        businessCount: false,
+        fab: false,
+        individualRecord: false,
+        jobCount: false,
+        loading: false,
+        queryResult: [],
+        naics4: '',
+        naics6: '',
+        naics8: '',
+        naicsCode: '',
+        pass: 'Admin123',
+        procedureName: '',
+        result: '',
+        search: '',
+        selectedCountry: '',
+        selectedState: '',
+        serverName: '127.0.0.1',
+        userName: 'sa',
         countries: ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Anguilla", "Antigua &amp; Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas"
           , "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia &amp; Herzegovina", "Botswana", "Brazil", "British Virgin Islands"
           , "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands", "Chad", "Chile", "China", "Colombia", "Congo", "Cook Islands", "Costa Rica"
@@ -254,18 +319,6 @@
           {text: '2012 NAICS US Title', align: 'center', sortable: true, value: '2012 NAICS US Title'},
           {text: 'FIPS', align: 'center', sortable: true, value: 'FIPS'},
         ],
-        loading: false,
-        queryResult: [],
-        naics4: '',
-        naics6: '',
-        naics8: '',
-        naicsCode: '',
-        pass: 'Admin123',
-        procedureName: '',
-        search: '',
-        selectedCountry: '',
-        selectedState: '',
-        serverName: '127.0.0.1',
         states: [
           'Alabama', 'Alaska', 'American Samoa', 'Arizona',
           'Arkansas', 'California', 'Colorado', 'Connecticut',
@@ -282,10 +335,6 @@
           'Texas', 'Utah', 'Vermont', 'Virgin Island', 'Virginia',
           'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
         ],
-        userName: 'sa',
-        jobCount: '',
-        individualRecord: '',
-        result: '',
       }
     },
     methods: {
@@ -309,9 +358,15 @@
       runQuery() {
         axios
           .post('/api-v1/runQuery', {
-            userName: this.userName,
+            country: this.selectedCountry,
+            businessCount: this.businessCount,
+            individualRecord: this.individualRecord,
+            jobCount: this.jobCount,
+            naicsCode: this.naicsCode,
             password: this.pass,
             server: this.serverName,
+            state: this.selectedState,
+            userName: this.userName,
           })
           .then(response => {
             console.log(response.data)

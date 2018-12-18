@@ -12,9 +12,10 @@ module.exports = {
 
   checkingConnection: async function (req, res) {
 
-    var Connection = require('tedious').Connection;
-    var Request = require('tedious').Request;
-    var TYPES = require('tedious').TYPES;
+    const Connection = require('tedious').Connection;
+    const Request = require('tedious').Request;
+    const TYPES = require('tedious').TYPES;
+    const db_name = 'DBE';
 
     // Create connection to database
     var config = {
@@ -22,23 +23,22 @@ module.exports = {
       password: req.param('password'),
       server: req.param('server'),
       options: {
-        database: 'SampleDB'
+        encrypt: true,
+        database: 'DBE'
       }
     }
-    var connection = new Connection(config);
+    const connection = new Connection(config);
 
     // Attempt to connect and execute queries if connection goes through
     await connection.on('connect', function (err) {
       if (err) {
         console.log(err);
         return res.badRequest({
-          err: err,
-          message: 'Disconnected MS-SQL Server.'
+          message: 'Disconnect'
         })
       } else {
-        console.log('Connected');
         return res.ok({
-          message: 'Connected MS-SQL Server.'
+          message: 'Connect'
         })
       }
     });
@@ -48,9 +48,10 @@ module.exports = {
   runQuery: async function (req, res) {
     try {
       const Connection = require('tedious').Connection;
-      const Request = require('tedious').Request;
+          const Request = require('tedious').Request;
       const TYPES = require('tedious').TYPES;
       const async = require('async');
+      const db_name = 'DBE';
 
       // Create connection to database
       const config = {
@@ -58,50 +59,95 @@ module.exports = {
         password: req.param('password'),
         server: req.param('server'),
         options: {
-          database: 'SampleDB'
+          encrypt: true,
+          database: db_name
         }
-      }
+      };
+      let rows = [];
+      let rowsCnt = 0;
+      let sql = '';
+      sql = `SELECT DISTINCT naics.[ABI]
+                 ,[ZIP]
+                 ,naics.[Year]
+                 ,cb.*
+                 ,nn.*
+                 ,fips.FIPS
+              FROM [DBE].[DW.YTS.NORM].[NAICS10years] naics
+              LEFT JOIN [DBE].[DW.YTS.NORM].[ZIP10years] zip ON zip.abi = naics.abi AND zip.year = naics.year
+              LEFT JOIN [DBE].[DW.YTS.NORM].[FIPS10years] fips ON fips.abi = naics.abi AND fips.year = naics.year
+              LEFT JOIN [DBE].[DW.YTS.NORM].CompanyBasics cb ON cb.abi = zip.abi
+              LEFT JOIN [DBE].[DW.Crosswalk].NAICS_Names nn ON nn.[2012 NAICS US Code] = NAICS
+              WHERE fips.FIPS = '34003'`;
 
       const connection = new Connection(config);
 
-      let sql = '';
-      sql = `SELECT DISTINCT naics.[ABI]
-                    ,[ZIP]
-    	              ,cb.*
-                    ,nn.*
-                    ,fips.fips 
-              FROM [DBE].[DW.YTS.NORM].[NAICS10years] naics
-              LEFT JOIN [DW.YTS.NORM].[ZIP10years] zip ON zip.abi = naics.abi AND zip.year = naics.year
-              LEFT JOIN [DW.YTS.NORM].[FIPS10years] fips ON fips.abi = naics.abi AND fips.year = naics.year
-              LEFT JOIN [DW.YTS.NORM].CompanyBasics cb ON cb.abi = zip.abi
-              LEFT JOIN [DW.Crosswalk].NAICS_Names nn ON nn.[2012 NAICS US Code] = NAICS
-              WHERE FIPS = '19101' AND NAICS IN ()`;
+      function getSQLData(sql) {
+        request = new Request(sql, function (err, rowCount, rows) {
+          if (err) {
+            console.log('Statement Failed:' + err)
+          } else {
+            rowsCnt = rowCount;
+            console.log(rowsCnt + ' rows')
+          }
+        });
+        request.on('row', function(columns) {
+          let row = {};
+          columns.forEach(function (column) {
+            if (column.value === null) {
+              row[column.metadata.colName] = 'Null';
+            } else {
+              row[column.metadata.colName] = column.value;
+            }
+          });
+          rows.push(row);
+          // console.log(rows);
+        });
 
-      const request = new Request(sql, function (err, rowCount, rows) {
+        connection.execSql(request);
+      }
+
+      connection.on('connect', function(err) {
         if (err) {
-          callback(err);
-          return res.badRequest({
-            data: {
-              sql: sql,
-              err: err,
-              message: 'Query running failed.'
-            }
-          })
+          console.log(err);
         } else {
-          console.log(rowCount + ' row(s) returned');
-          callback(null);
-          return res.ok({
-            data: {
-              sql: sql,
-              row_count: rowCount,
-              rows: rows
-            }
-          })
+          console.log('Connected');
+          getSQLData(sql);
+          // let result = new Promise((resolve, reject) => {
+          //   getSQLData(sql);
+          //   setTimeout(() => resolve(rows), 3000)
+
+          // });
+          setTimeout(() => {
+            console.log(rows);
+
+            return res.ok({
+              query: sql,
+              count: rowsCnt,
+              data: rows,
+            });
+          }, 3000)
         }
       });
 
-    } catch (e) {
+      // Print the rows read
+      // let result = "";
+      // request.on('row', columns => {
+      //   columns.forEach(column => {
+      //     if (column.valuse === null) {
+      //       console.log('NULL');
+      //     } else {
+      //       result += column.value + " ";
+      //     }
+      //   });
+      //   console.log(result);
+      //   result = "";
+      // });
 
+      // Execute SQL statement
+      // connection.execSql(request);
+
+    } catch (e) {
+      console.log(e);
     }
   },
 

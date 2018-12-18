@@ -64,8 +64,7 @@ new Vue({
           this.runQuery()
         })
         .catch(err => {
-          console.log(err)
-          this.result += JSON.stringify(err) + '\n'
+          this.result += `${err.response.data.message}\n`
         })
     },
     runQuery() {
@@ -77,7 +76,7 @@ new Vue({
         })
         .then(response => {
           console.log(response.data)
-          this.result += `${response.data.message}\n`
+          this.result += `${JSON.stringify(response.data)}\n`
         })
         .catch(err => {
           console.log(err)

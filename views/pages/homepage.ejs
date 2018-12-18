@@ -151,19 +151,183 @@
           </v-layout>
         </v-card>
 
-        <v-layout row wrap class="mt-2">
-          <v-flex xs12>
-            <v-textarea
-              outline
-              readonly
-              name="input-7-4"
-              label="Result:"
-              :value="result"
-            ></v-textarea>
-          </v-flex>
-        </v-layout>
+        <!--<v-layout row wrap class="mt-2">-->
+          <!--<v-flex xs12>-->
+            <!--<v-textarea-->
+              <!--outline-->
+              <!--readonly-->
+              <!--name="input-7-4"-->
+              <!--label="Result:"-->
+              <!--:value="result"-->
+            <!--&gt;</v-textarea>-->
+          <!--</v-flex>-->
+        <!--</v-layout>-->
 
       </v-container>
+      <v-container fluid>
+        <v-card>
+          <v-card-title>
+            <v-spacer></v-spacer>
+            <v-text-field
+              v-model="search"
+              append-icon="search"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-card-title>
+          <v-data-table
+            :headers="headers"
+            :items="queryResult"
+            :loading="loading"
+            :search="search"
+            class="elevation-1"
+          >
+            <v-progress-linear
+              slot="progress"
+              color="blue"
+              height="2"
+              indeterminate
+            ></v-progress-linear>
+            <template
+              slot="items"
+              slot-scope="props"
+            >
+              <td class="text-xs-center">{{ props.item.ABI }}</td>
+              <td class="text-xs-center">{{ props.item.ZIP }}</td>
+              <td class="text-xs-center">{{ props.item.Year }}</td>
+              <td class="text-xs-center">{{ props.item.Company }}</td>
+              <td class="text-xs-center">{{ props.item.CITY }}</td>
+              <td class="text-xs-center">{{ props.item.State }}</td>
+              <td class="text-xs-center">{{ props.item.ZipCode }}</td>
+              <td class="text-xs-center">{{ props.item.StockTicker }}</td>
+              <td class="text-xs-center">{{ props.item.InactiveBinary }}</td>
+              <td class="text-xs-center">{{ props.item['2012 NAICS US Code'] }}</td>
+              <td class="text-xs-center">{{ props.item['2012 NAICS US Title'] }}</td>
+              <td class="text-xs-center">{{ props.item.FIPS }}</td>
+            </template>
+          </v-data-table>
+        </v-card>
+      </v-container>
+
     </v-content>
   </v-app>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+  new Vue({
+    el: '#app',
+    data() {
+      return {
+        authType: '',
+        businessCount: '',
+        countries: ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Anguilla", "Antigua &amp; Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas"
+          , "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia &amp; Herzegovina", "Botswana", "Brazil", "British Virgin Islands"
+          , "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands", "Chad", "Chile", "China", "Colombia", "Congo", "Cook Islands", "Costa Rica"
+          , "Cote D Ivoire", "Croatia", "Cruise Ship", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea"
+          , "Estonia", "Ethiopia", "Falkland Islands", "Faroe Islands", "Fiji", "Finland", "France", "French Polynesia", "French West Indies", "Gabon", "Gambia", "Georgia", "Germany", "Ghana"
+          , "Gibraltar", "Greece", "Greenland", "Grenada", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea Bissau", "Guyana", "Haiti", "Honduras", "Hong Kong", "Hungary", "Iceland", "India"
+          , "Indonesia", "Iran", "Iraq", "Ireland", "Isle of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kuwait", "Kyrgyz Republic", "Laos", "Latvia"
+          , "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macau", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Mauritania"
+          , "Mauritius", "Mexico", "Moldova", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", "Namibia", "Nepal", "Netherlands", "Netherlands Antilles", "New Caledonia"
+          , "New Zealand", "Nicaragua", "Niger", "Nigeria", "Norway", "Oman", "Pakistan", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal"
+          , "Puerto Rico", "Qatar", "Reunion", "Romania", "Russia", "Rwanda", "Saint Pierre &amp; Miquelon", "Samoa", "San Marino", "Satellite", "Saudi Arabia", "Senegal", "Serbia", "Seychelles"
+          , "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "South Africa", "South Korea", "Spain", "Sri Lanka", "St Kitts &amp; Nevis", "St Lucia", "St Vincent", "St. Lucia", "Sudan"
+          , "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor L'Este", "Togo", "Tonga", "Trinidad &amp; Tobago", "Tunisia"
+          , "Turkey", "Turkmenistan", "Turks &amp; Caicos", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "United States Minor Outlying Islands", "Uruguay"
+          , "Uzbekistan", "Venezuela", "Vietnam", "Virgin Islands (US)", "Yemen", "Zambia", "Zimbabwe"],
+        headers: [
+          {text: 'ABI', align: 'center', sortable: true, value: 'ABI'},
+          {text: 'ZIP', align: 'center', sortable: true, value: 'ZIP'},
+          {text: 'Year', align: 'center', sortable: true, value: 'Year'},
+          {text: 'Company', align: 'center', sortable: true, value: 'Company'},
+          {text: 'CITY', align: 'center', sortable: true, value: 'CITY'},
+          {text: 'State', align: 'center', sortable: true, value: 'State'},
+          {text: 'ZipCode', align: 'center', sortable: true, value: 'ZipCode'},
+          {text: 'StockTicker', align: 'center', sortable: true, value: 'StockTicker'},
+          {text: 'InactiveBinary', align: 'center', sortable: true, value: 'InactiveBinary'},
+          {text: '2012 NAICS US Code', align: 'center', sortable: true, value: '2012 NAICS US Code'},
+          {text: '2012 NAICS US Title', align: 'center', sortable: true, value: '2012 NAICS US Title'},
+          {text: 'FIPS', align: 'center', sortable: true, value: 'FIPS'},
+        ],
+        loading: false,
+        queryResult: [],
+        naics4: '',
+        naics6: '',
+        naics8: '',
+        naicsCode: '',
+        pass: 'Admin123',
+        procedureName: '',
+        search: '',
+        selectedCountry: '',
+        selectedState: '',
+        serverName: '127.0.0.1',
+        states: [
+          'Alabama', 'Alaska', 'American Samoa', 'Arizona',
+          'Arkansas', 'California', 'Colorado', 'Connecticut',
+          'Delaware', 'District of Columbia', 'Federated States of Micronesia',
+          'Florida', 'Georgia', 'Guam', 'Hawaii', 'Idaho',
+          'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
+          'Louisiana', 'Maine', 'Marshall Islands', 'Maryland',
+          'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi',
+          'Missouri', 'Montana', 'Nebraska', 'Nevada',
+          'New Hampshire', 'New Jersey', 'New Mexico', 'New York',
+          'North Carolina', 'North Dakota', 'Northern Mariana Islands', 'Ohio',
+          'Oklahoma', 'Oregon', 'Palau', 'Pennsylvania', 'Puerto Rico',
+          'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee',
+          'Texas', 'Utah', 'Vermont', 'Virgin Island', 'Virginia',
+          'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
+        ],
+        userName: 'sa',
+        jobCount: '',
+        individualRecord: '',
+        result: '',
+      }
+    },
+    methods: {
+      connectStatus() {
+        axios
+          .post('/api-v1/connectStatus', {
+            userName: this.userName,
+            password: this.pass,
+            server: this.serverName,
+          })
+          .then(response => {
+            console.log(response.data)
+            this.result += `${response.data.message}\n`
+            this.loading = true;
+            this.runQuery()
+          })
+          .catch(err => {
+            this.result += `${err.response.data.message}\n`
+          })
+      },
+      runQuery() {
+        axios
+          .post('/api-v1/runQuery', {
+            userName: this.userName,
+            password: this.pass,
+            server: this.serverName,
+          })
+          .then(response => {
+            console.log(response.data)
+            this.queryResult = response.data.data;
+            this.loading = false;
+            console.log(this.queryResult)
+          })
+          .catch(err => {
+            console.log(err)
+            this.result += JSON.stringify(err) + '\n'
+          })
+      }
+    },
+    computed: {
+
+    }
+  })
+
+</script>

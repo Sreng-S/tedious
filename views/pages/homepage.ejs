@@ -44,6 +44,7 @@
         <!-- query panel -->
         <v-card
           v-if="fab"
+          ref="form"
           dense
           absolute
           transition="scale-transition"
@@ -54,17 +55,19 @@
               <v-layout row>
                 <v-flex xs12 sm6 class="px-3">
                   <v-text-field
+                    ref="serverName"
                     v-model="serverName"
+                    :rules="[() => !!serverName || 'Server name is required']"
                     label="Server Name"
-                    hide-details
+                    required
                   ></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 class="px-3">
-                  <v-text-field
-                    v-model="authType"
+                  <v-select
+                    :items="authTypes"
+                    v-model="selectedAuthType"
                     label="Authentication Type"
-                    hide-details
-                  ></v-text-field>
+                  ></v-select>
                 </v-flex>
               </v-layout>
               <v-layout row>
@@ -72,14 +75,18 @@
                   <v-text-field
                     v-model="userName"
                     label="User Name"
-                    hide-details
+                    :rules="[() => !!userName || 'User name is required']"
+                    :disabled="selectedAuthType=='Windows Authentication'"
+                    required
                   ></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 class="px-3">
                   <v-text-field
                     v-model="pass"
                     label="Password"
-                    hide-details
+                    :rules="[() => !!pass || 'Password is required']"
+                    :disabled="selectedAuthType=='Windows Authentication'"
+                    required
                   ></v-text-field>
                 </v-flex>
               </v-layout>
@@ -271,9 +278,10 @@
     el: '#app',
     data() {
       return {
-        authType: '',
+        authTypes: [ 'Windows Authentication', 'User name and password' ],
         businessCount: false,
         fab: false,
+        formHasErrors: false,
         individualRecord: false,
         jobCount: false,
         loading: false,
@@ -286,6 +294,7 @@
         procedureName: '',
         result: '',
         search: '',
+        selectedAuthType: 'User name and password',
         selectedCountry: '',
         selectedState: '',
         serverName: '127.0.0.1',
@@ -339,21 +348,28 @@
     },
     methods: {
       connectStatus() {
-        axios
-          .post('/api-v1/connectStatus', {
-            userName: this.userName,
-            password: this.pass,
-            server: this.serverName,
-          })
-          .then(response => {
-            console.log(response.data)
-            this.result += `${response.data.message}\n`
-            this.loading = true;
-            this.runQuery()
-          })
-          .catch(err => {
-            this.result += `${err.response.data.message}\n`
-          })
+        this.formHasErrors = false;
+        Object.keys(this.form).forEach(val => {
+          if (!this.form[val]) this.formHasErrors = true
+        })
+
+        if (!this.formHasErrors) {
+          axios
+            .post('/api-v1/connectStatus', {
+              userName: this.userName,
+              password: this.pass,
+              server: this.serverName,
+            })
+            .then(response => {
+              console.log(response.data)
+              this.result += `${response.data.message}\n`
+              this.loading = true;
+              this.runQuery()
+            })
+            .catch(err => {
+              this.result += `${err.response.data.message}\n`
+            })
+        }
       },
       runQuery() {
         axios
@@ -381,7 +397,13 @@
       }
     },
     computed: {
-
+      form () {
+        return {
+          serverName: this.serverName,
+          userName: this.userName,
+          pass: this.pass,
+        }
+      }
     }
   })
 

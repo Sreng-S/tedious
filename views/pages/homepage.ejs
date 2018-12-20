@@ -248,18 +248,12 @@
               slot="items"
               slot-scope="props"
             >
-              <td class="text-xs-center">{{ props.item.ABI }}</td>
-              <td class="text-xs-center">{{ props.item.ZIP }}</td>
-              <td class="text-xs-center">{{ props.item.Year }}</td>
-              <td class="text-xs-center">{{ props.item.Company }}</td>
-              <td class="text-xs-center">{{ props.item.CITY }}</td>
-              <td class="text-xs-center">{{ props.item.State }}</td>
-              <td class="text-xs-center">{{ props.item.ZipCode }}</td>
-              <td class="text-xs-center">{{ props.item.StockTicker }}</td>
-              <td class="text-xs-center">{{ props.item.InactiveBinary }}</td>
-              <td class="text-xs-center">{{ props.item['2012 NAICS US Code'] }}</td>
-              <td class="text-xs-center">{{ props.item['2012 NAICS US Title'] }}</td>
-              <td class="text-xs-center">{{ props.item.FIPS }}</td>
+              <td
+                v-for="key in keys"
+                class="text-xs-center"
+              >
+                {{ props.item[key] }}
+              </td>
             </template>
           </v-data-table>
         </v-card>
@@ -282,8 +276,10 @@
         businessCount: false,
         fab: false,
         formHasErrors: false,
+        headers: [],
         individualRecord: false,
         jobCount: false,
+        keys: [],
         loading: false,
         queryResult: [],
         naics4: '',
@@ -314,20 +310,6 @@
           , "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor L'Este", "Togo", "Tonga", "Trinidad &amp; Tobago", "Tunisia"
           , "Turkey", "Turkmenistan", "Turks &amp; Caicos", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "United States Minor Outlying Islands", "Uruguay"
           , "Uzbekistan", "Venezuela", "Vietnam", "Virgin Islands (US)", "Yemen", "Zambia", "Zimbabwe"],
-        headers: [
-          {text: 'ABI', align: 'center', sortable: true, value: 'ABI'},
-          {text: 'ZIP', align: 'center', sortable: true, value: 'ZIP'},
-          {text: 'Year', align: 'center', sortable: true, value: 'Year'},
-          {text: 'Company', align: 'center', sortable: true, value: 'Company'},
-          {text: 'CITY', align: 'center', sortable: true, value: 'CITY'},
-          {text: 'State', align: 'center', sortable: true, value: 'State'},
-          {text: 'ZipCode', align: 'center', sortable: true, value: 'ZipCode'},
-          {text: 'StockTicker', align: 'center', sortable: true, value: 'StockTicker'},
-          {text: 'InactiveBinary', align: 'center', sortable: true, value: 'InactiveBinary'},
-          {text: '2012 NAICS US Code', align: 'center', sortable: true, value: '2012 NAICS US Code'},
-          {text: '2012 NAICS US Title', align: 'center', sortable: true, value: '2012 NAICS US Title'},
-          {text: 'FIPS', align: 'center', sortable: true, value: 'FIPS'},
-        ],
         states: [
           'Alabama', 'Alaska', 'American Samoa', 'Arizona',
           'Arkansas', 'California', 'Colorado', 'Connecticut',
@@ -374,6 +356,7 @@
       runQuery() {
         axios
           .post('/api-v1/runQuery', {
+            authType: this.selectedAuthType,
             country: this.selectedCountry,
             businessCount: this.businessCount,
             individualRecord: this.individualRecord,
@@ -385,8 +368,17 @@
             userName: this.userName,
           })
           .then(response => {
-            console.log(response.data)
             this.queryResult = response.data.data;
+            Object.keys(this.queryResult[0]).forEach(key => {
+              console.log(key)
+              this.headers.push({
+                text: key,
+                align: 'center',
+                sortable: true,
+                value: key
+              });
+              this.keys.push(key);
+            });
             this.loading = false;
             console.log(this.queryResult)
           })
@@ -403,6 +395,9 @@
           userName: this.userName,
           pass: this.pass,
         }
+      },
+      header() {
+        Object.keys(this.queryResult).forEach(key => console.log(key));
       }
     }
   })
